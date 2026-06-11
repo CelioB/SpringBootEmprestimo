@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankLoan API - Sandbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+
+    <nav class="bg-gray-800 border-b border-gray-700 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-green-400 flex items-center gap-2">
+                <span>🏦</span> BankLoan API <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded-full">v1.0</span>
+            </h1>
+            <span class="text-sm text-gray-400">Ambiente de Testes (Sandbox)</span>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-2 space-y-6">
+            
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-600 text-xs font-bold px-2.5 py-1 rounded">POST</span>
+                    <code class="text-sm text-gray-300">/api/v1/loans/simulate</code>
+                </div>
+                <h2 class="text-lg font-semibold mb-4">Simular Empréstimo Bancário</h2>
+                
+                <form id="formSimulate" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase mb-1">Valor do Empréstimo (R$)</label>
+                        <input type="number" id="simAmount" value="5000" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase mb-1">Parcelas (Meses)</label>
+                        <select id="simMonths" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500">
+                            <option value="12">12x</option>
+                            <option value="24" selected>24x</option>
+                            <option value="36">36x</option>
+                            <option value="48">48x</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs text-gray-400 uppercase mb-1">Renda Mensal do Cliente (R$)</label>
+                        <input type="number" id="simIncome" value="3500" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-medium py-2 px-4 rounded transition">
+                            Enviar Requisição
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-green-600 text-xs font-bold px-2.5 py-1 rounded">GET</span>
+                    <code class="text-sm text-gray-300">/api/v1/loans/status/{id}</code>
+                </div>
+                <h2 class="text-lg font-semibold mb-4">Consultar Status do Empréstimo</h2>
+                
+                <form id="formStatus" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase mb-1">ID do Contrato / Proposta</label>
+                        <input type="text" id="loanId" value="LON-2026-8974" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition">
+                        Buscar Dados
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 shadow-lg sticky top-6 overflow-hidden">
+                <div class="bg-gray-750 p-4 border-b border-gray-700 flex justify-between items-center">
+                    <span class="text-sm font-semibold text-gray-300">Resposta da API (JSON)</span>
+                    <span id="statusCode" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-400">IDLE</span>
+                </div>
+                <div class="p-4">
+                    <pre id="jsonResponse" class="bg-gray-950 p-4 rounded text-xs text-green-400 font-mono overflow-x-auto min-h-[350px] max-h-[500px]">
+// Clique em "Enviar Requisição" para testar a API.
+// As respostas simuladas aparecerão aqui em tempo real.
+                    </pre>
+                </div>
+                <div class="p-4 bg-gray-850 border-t border-gray-700 text-center">
+                    <button id="clearConsole" class="text-xs text-gray-400 hover:text-white underline">Limpar Console</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const jsonResponse = document.getElementById('jsonResponse');
+        const statusCode = document.getElementById('statusCode');
+
+        // Função utilitária para mudar o status da resposta visualmente
+        function setResponseStatus(status, type) {
+            statusCode.innerText = status;
+            statusCode.className = "text-xs font-bold px-2 py-0.5 rounded ";
+            if (type === 'success') statusCode.classList.add('bg-green-900', 'text-green-300');
+            else if (type === 'error') statusCode.classList.add('bg-red-900', 'text-red-300');
+            else statusCode.classList.add('bg-gray-700', 'text-gray-400');
+        }
+
+        // Simulação do POST: /api/v1/loans/simulate
+        document.getElementById('formSimulate').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('simAmount').value);
+            const months = parseInt(document.getElementById('simMonths').value);
+            const income = parseFloat(document.getElementById('simIncome').value);
+            
+            // Lógica simples de aprovação bancária (simulação)
+            const taxRate = 0.045; // 4.5% a.m.
+            const installment = (amount * taxRate) / (1 - Math.pow(1 + taxRate, -months));
+            const maxInstallmentAllowed = income * 0.30; // Comprometimento máximo de 30% da renda
+            
+            let approved = installment <= maxInstallmentAllowed;
+            
+            const mockResponse = {
+                status: approved ? "APPROVED" : "DENIED",
+                simulation_id: `SIM-${Math.floor(100000 + Math.random() * 900000)}`,
+                timestamp: new Date().toISOString(),
+                request_data: {
+                    requested_amount: amount,
+                    installments: months,
+                    customer_income: income
+                },
+                financial_analysis: {
+                    monthly_interest_rate: "4.5%",
+                    calculated_installment: parseFloat(installment.toFixed(2)),
+                    income_commitment_percentage: parseFloat(((installment / income) * 100).toFixed(2)),
+                    denial_reason: approved ? null : "A parcela ultrapassa o limite de 30% da renda mensal informada."
+                },
+                next_steps: approved ? "Acesse /api/v1/loans/contract com o simulation_id para efetivar." : "Reveja o valor solicitado ou aumente o número de parcelas."
+            };
+
+            setResponseStatus('200 OK', 'success');
+            jsonResponse.innerText = JSON.stringify(mockResponse, null, 4);
+        });
+
+        // Simulação do GET: /api/v1/loans/status/{id}
+        document.getElementById('formStatus').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const loanId = document.getElementById('loanId').value;
+
+            const mockResponse = {
+                contract_id: loanId,
+                status: "ACTIVE",
+                created_at: "2026-01-15T14:22:10Z",
+                maturity_date: "2028-01-15T14:22:10Z",
+                financials: {
+                    total_borrowed: 15000.00,
+                    total_to_pay: 22450.80,
+                    remaining_balance: 18709.00,
+                    installments_paid: 4,
+                    installments_total: 24
+                },
+                payment_history: [
+                    { installment: 1, due_date: "2026-02-15", status: "PAID" },
+                    { installment: 2, due_date: "2026-03-15", status: "PAID" },
+                    { installment: 3, due_date: "2026-04-15", status: "PAID" },
+                    { installment: 4, due_date: "2026-05-15", status: "PAID" },
+                    { installment: 5, due_date: "2026-06-15", status: "PENDING" }
+                ]
+            };
+
+            setResponseStatus('200 OK', 'success');
+            jsonResponse.innerText = JSON.stringify(mockResponse, null, 4);
+        });
+
+        // Limpar Console
+        document.getElementById('clearConsole').addEventListener('click', function() {
+            jsonResponse.innerText = "// Console limpo. Aguardando novas requisições...";
+            setResponseStatus('IDLE', 'idle');
+        });
+    </script>
+</body>
+</html>
