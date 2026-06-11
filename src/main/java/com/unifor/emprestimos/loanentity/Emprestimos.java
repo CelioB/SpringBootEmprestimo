@@ -1,4 +1,4 @@
-package com.unifor.emprestimos.seminario;
+package com.unifor.emprestimos.loanentity;
 
 import jakarta.persistence.*;
 

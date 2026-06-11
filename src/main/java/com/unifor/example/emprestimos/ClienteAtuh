@@ -1,2 +1,0 @@
-package com.unifor.emprestimos;
-public record BankUserContext(String username, String role, String accountNumber) {}

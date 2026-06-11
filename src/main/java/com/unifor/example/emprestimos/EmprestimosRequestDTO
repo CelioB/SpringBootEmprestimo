@@ -1,5 +1,0 @@
-public record LoanRequestDTO(
-    @NotNull @Positive BigDecimal principal,
-    @NotNull @Positive BigDecimal interestRate,
-    @NotNull @Positive Integer months
-) {}

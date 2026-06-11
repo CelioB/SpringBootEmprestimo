@@ -8,7 +8,7 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.unifor.example</groupId>
+	<groupId>com.unifor</groupId>
 	<artifactId>emprestimos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>emprestimos</name>
@@ -39,10 +39,6 @@
 	  <dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-data-jpa</artifactId>
-	  </dependency>
-	  <dependency>
-	    <groupId>org.postgresql</groupId>
-	    <artifactId>postgresql</artifactId>
 	  </dependency>
 	  <!-- Validação de Bean (javax.validation) -->
 	  <dependency>

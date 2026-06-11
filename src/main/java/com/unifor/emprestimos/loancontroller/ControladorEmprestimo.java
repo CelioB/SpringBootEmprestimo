@@ -1,20 +1,20 @@
-package com.unifor.emprestimos.loanController;
+package com.unifor.emprestimos.loancontroller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.unifor.emprestimos.loanDTO.PedidoEmprestimo;
-import com.unifor.emprestimos.loanEntity.Emprestimos;
-import com.unifor.emprestimos.loanService.LoanService;
+import com.unifor.emprestimos.loandto.PedidoEmprestimo;
+import com.unifor.emprestimos.loanentity.Emprestimos;
+import com.unifor.emprestimos.loanservice.ServicoEmprestimo;
 
 @RestController
 @RequestMapping("/api/loans")
 public class ControladorEmprestimo {
 
-    private final LoanService service;
+    private final ServicoEmprestimo service;
 
-    public ControladorEmprestimo(LoanService service) {
+    public ControladorEmprestimo(ServicoEmprestimo service) {
         this.service = service;
     }
 

@@ -1,4 +1,4 @@
-package com.unifor.emprestimos.service;
+package com.unifor.emprestimos.loanservice;
 
 import java.util.List;
 
@@ -9,11 +9,11 @@ import com.unifor.emprestimos.loanentity.Emprestimos;
 import com.unifor.emprestimos.loanrepository.RepositorioEmprestimo;
 
 @Service
-public class LoanService {
+public class ServicoEmprestimo {
 
     private final RepositorioEmprestimo repo;
 
-    public LoanService(RepositorioEmprestimo repo) {
+    public ServicoEmprestimo(RepositorioEmprestimo repo) {
         this.repo = repo;
     }
 
