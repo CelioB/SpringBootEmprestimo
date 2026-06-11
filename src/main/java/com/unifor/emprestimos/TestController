@@ -1,12 +1,13 @@
-package com.unifor.emprestimos.controller;
+package com.unifor.emprestimos;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class TestController {
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     public String teste() {
         return "Sistema funcionando!";
     }
