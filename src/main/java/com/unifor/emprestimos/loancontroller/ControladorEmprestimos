@@ -1,0 +1,39 @@
+package com.unifor.emprestimos.loanController;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.unifor.emprestimos.loanDTO.PedidoEmprestimo;
+import com.unifor.emprestimos.loanEntity.Emprestimos;
+import com.unifor.emprestimos.loanService.LoanService;
+
+@RestController
+@RequestMapping("/api/loans")
+public class ControladorEmprestimo {
+
+    private final LoanService service;
+
+    public ControladorEmprestimo(LoanService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public Emprestimos create(
+            @RequestBody PedidoEmprestimo req) {
+
+        return service.create(req);
+    }
+
+    @GetMapping
+    public List<Emprestimos> all() {
+        return service.all();
+    }
+
+    @PutMapping("/{id}/approve")
+    public Emprestimos approve(
+            @PathVariable Long id) {
+
+        return service.approve(id);
+    }
+}

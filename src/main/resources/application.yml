@@ -1,0 +1,16 @@
+# application.yml (ambiente local)
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_db
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

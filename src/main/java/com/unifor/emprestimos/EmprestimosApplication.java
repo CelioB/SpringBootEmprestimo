@@ -1,4 +1,4 @@
-package com.unifor.example.emprestimos;
+package com.unifor.emprestimos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

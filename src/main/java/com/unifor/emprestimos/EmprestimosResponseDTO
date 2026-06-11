@@ -1,0 +1,10 @@
+package com.unifor.emprestimos;
+public record LoanResponseDTO(
+    Long id,
+    String ownerUsername,
+    BigDecimal principal,
+    BigDecimal interestRate,
+    Integer months,
+    BigDecimal monthlyPayment,
+    LoanStatus status
+) {}
