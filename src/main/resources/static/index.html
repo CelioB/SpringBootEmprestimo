@@ -3,87 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BankLoan API - Sandbox</title>
+    <title>Empréstimos - Sistema de Gestão</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
 
-    <nav class="bg-gray-800 border-b border-gray-700 p-4">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 border-b border-gray-700 p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold text-green-400 flex items-center gap-2">
-                <span>🏦</span> BankLoan API <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded-full">v1.0</span>
+            <h1 class="text-2xl font-bold text-blue-400 flex items-center gap-2">
+                <span>💰</span> Empréstimos
             </h1>
-            <span class="text-sm text-gray-400">Ambiente de Testes (Sandbox)</span>
+            <div class="text-sm text-gray-400">
+                <span id="apiStatus" class="inline-block px-3 py-1 rounded-full bg-gray-700">Conectando...</span>
+            </div>
         </div>
     </nav>
 
     <main class="container mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
+        <!-- Left Column: Forms -->
         <div class="lg:col-span-2 space-y-6">
             
+            <!-- Create Loan Form -->
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-blue-600 text-xs font-bold px-2.5 py-1 rounded">POST</span>
-                    <code class="text-sm text-gray-300">/api/v1/loans/simulate</code>
+                    <span class="bg-green-600 text-xs font-bold px-2.5 py-1 rounded">POST</span>
+                    <code class="text-sm text-gray-300">/api/loans</code>
                 </div>
-                <h2 class="text-lg font-semibold mb-4">Simular Empréstimo Bancário</h2>
+                <h2 class="text-lg font-semibold mb-4">Solicitar Novo Empréstimo</h2>
                 
-                <form id="formSimulate" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase mb-1">Valor do Empréstimo (R$)</label>
-                        <input type="number" id="simAmount" value="5000" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
+                <form id="formCreateLoan" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase mb-2 font-semibold">Valor Principal (R$)</label>
+                            <input type="number" id="principal" placeholder="5000.00" step="0.01" min="100" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-green-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase mb-2 font-semibold">Taxa de Juros (% a.m.)</label>
+                            <input type="number" id="interestRate" placeholder="2.5" step="0.01" min="0.1" max="20" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-green-500" required>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 uppercase mb-1">Parcelas (Meses)</label>
-                        <select id="simMonths" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500">
-                            <option value="12">12x</option>
-                            <option value="24" selected>24x</option>
-                            <option value="36">36x</option>
-                            <option value="48">48x</option>
+                        <label class="block text-xs text-gray-400 uppercase mb-2 font-semibold">Prazo (Meses)</label>
+                        <select id="months" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-green-500">
+                            <option value="12">12 meses</option>
+                            <option value="24" selected>24 meses</option>
+                            <option value="36">36 meses</option>
+                            <option value="48">48 meses</option>
+                            <option value="60">60 meses</option>
                         </select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs text-gray-400 uppercase mb-1">Renda Mensal do Cliente (R$)</label>
-                        <input type="number" id="simIncome" value="3500" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
-                    </div>
-                    <div class="md:col-span-2">
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-medium py-2 px-4 rounded transition">
-                            Enviar Requisição
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-green-600 text-xs font-bold px-2.5 py-1 rounded">GET</span>
-                    <code class="text-sm text-gray-300">/api/v1/loans/status/{id}</code>
-                </div>
-                <h2 class="text-lg font-semibold mb-4">Consultar Status do Empréstimo</h2>
-                
-                <form id="formStatus" class="space-y-4">
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase mb-1">ID do Contrato / Proposta</label>
-                        <input type="text" id="loanId" value="LON-2026-8974" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-green-500" required>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition">
-                        Buscar Dados
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-medium py-3 px-4 rounded transition">
+                        Solicitar Empréstimo
                     </button>
                 </form>
             </div>
 
+            <!-- List Loans -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-600 text-xs font-bold px-2.5 py-1 rounded">GET</span>
+                    <code class="text-sm text-gray-300">/api/loans</code>
+                </div>
+                <h2 class="text-lg font-semibold mb-4">Listar Empréstimos</h2>
+                
+                <button id="btnListLoans" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-4 rounded transition mb-4">
+                    Carregar Lista
+                </button>
+
+                <div id="loansList" class="space-y-3 max-h-96 overflow-y-auto">
+                    <p class="text-gray-400 text-sm">Clique em "Carregar Lista" para visualizar os empréstimos</p>
+                </div>
+            </div>
+
         </div>
 
+        <!-- Right Column: Response Panel -->
         <div class="lg:col-span-1">
-            <div class="bg-gray-800 rounded-lg border border-gray-700 shadow-lg sticky top-6 overflow-hidden">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 shadow-lg sticky top-24 overflow-hidden">
                 <div class="bg-gray-750 p-4 border-b border-gray-700 flex justify-between items-center">
-                    <span class="text-sm font-semibold text-gray-300">Resposta da API (JSON)</span>
+                    <span class="text-sm font-semibold text-gray-300">Resposta da API</span>
                     <span id="statusCode" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-400">IDLE</span>
                 </div>
                 <div class="p-4">
-                    <pre id="jsonResponse" class="bg-gray-950 p-4 rounded text-xs text-green-400 font-mono overflow-x-auto min-h-[350px] max-h-[500px]">
-// Clique em "Enviar Requisição" para testar a API.
-// As respostas simuladas aparecerão aqui em tempo real.
+                    <pre id="jsonResponse" class="bg-gray-950 p-4 rounded text-xs text-green-400 font-mono overflow-x-auto min-h-[400px] max-h-[600px]">
+// Aguardando requisição...
                     </pre>
                 </div>
                 <div class="p-4 bg-gray-850 border-t border-gray-700 text-center">
@@ -95,90 +100,164 @@
     </main>
 
     <script>
+        const API_BASE = globalThis.location.origin;
         const jsonResponse = document.getElementById('jsonResponse');
         const statusCode = document.getElementById('statusCode');
+        const apiStatus = document.getElementById('apiStatus');
 
-        // Função utilitária para mudar o status da resposta visualmente
+        // Set response status
         function setResponseStatus(status, type) {
             statusCode.innerText = status;
             statusCode.className = "text-xs font-bold px-2 py-0.5 rounded ";
             if (type === 'success') statusCode.classList.add('bg-green-900', 'text-green-300');
             else if (type === 'error') statusCode.classList.add('bg-red-900', 'text-red-300');
+            else if (type === 'loading') statusCode.classList.add('bg-yellow-900', 'text-yellow-300');
             else statusCode.classList.add('bg-gray-700', 'text-gray-400');
         }
 
-        // Simulação do POST: /api/v1/loans/simulate
-        document.getElementById('formSimulate').addEventListener('submit', function(e) {
+        // Check API health
+        async function checkApiHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/api/loans`, { method: 'GET' });
+                if (response.ok) {
+                    apiStatus.innerText = '✓ API Online';
+                    apiStatus.className = 'inline-block px-3 py-1 rounded-full bg-green-900 text-green-300';
+                } else {
+                    apiStatus.innerText = '⚠ API Offline';
+                    apiStatus.className = 'inline-block px-3 py-1 rounded-full bg-red-900 text-red-300';
+                }
+            } catch (error) {
+                apiStatus.innerText = '✗ Sem Conexão';
+                apiStatus.className = 'inline-block px-3 py-1 rounded-full bg-red-900 text-red-300';
+            }
+        }
+
+        // Create Loan
+        document.getElementById('formCreateLoan').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const amount = parseFloat(document.getElementById('simAmount').value);
-            const months = parseInt(document.getElementById('simMonths').value);
-            const income = parseFloat(document.getElementById('simIncome').value);
-            
-            // Lógica simples de aprovação bancária (simulação)
-            const taxRate = 0.045; // 4.5% a.m.
-            const installment = (amount * taxRate) / (1 - Math.pow(1 + taxRate, -months));
-            const maxInstallmentAllowed = income * 0.30; // Comprometimento máximo de 30% da renda
-            
-            let approved = installment <= maxInstallmentAllowed;
-            
-            const mockResponse = {
-                status: approved ? "APPROVED" : "DENIED",
-                simulation_id: `SIM-${Math.floor(100000 + Math.random() * 900000)}`,
-                timestamp: new Date().toISOString(),
-                request_data: {
-                    requested_amount: amount,
-                    installments: months,
-                    customer_income: income
-                },
-                financial_analysis: {
-                    monthly_interest_rate: "4.5%",
-                    calculated_installment: parseFloat(installment.toFixed(2)),
-                    income_commitment_percentage: parseFloat(((installment / income) * 100).toFixed(2)),
-                    denial_reason: approved ? null : "A parcela ultrapassa o limite de 30% da renda mensal informada."
-                },
-                next_steps: approved ? "Acesse /api/v1/loans/contract com o simulation_id para efetivar." : "Reveja o valor solicitado ou aumente o número de parcelas."
+            const payload = {
+                principal: parseFloat(document.getElementById('principal').value),
+                interestRate: parseFloat(document.getElementById('interestRate').value),
+                months: parseInt(document.getElementById('months').value)
             };
 
-            setResponseStatus('200 OK', 'success');
-            jsonResponse.innerText = JSON.stringify(mockResponse, null, 4);
+            setResponseStatus('201 CREATING...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/loans`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    setResponseStatus('201 CREATED', 'success');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+                    document.getElementById('formCreateLoan').reset();
+                } else {
+                    setResponseStatus(`${response.status} ERROR`, 'error');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                setResponseStatus('ERROR', 'error');
+                jsonResponse.innerText = `Erro: ${error.message}`;
+            }
         });
 
-        // Simulação do GET: /api/v1/loans/status/{id}
-        document.getElementById('formStatus').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const loanId = document.getElementById('loanId').value;
+        // List Loans
+        document.getElementById('btnListLoans').addEventListener('click', async function() {
+            setResponseStatus('200 LOADING...', 'loading');
 
-            const mockResponse = {
-                contract_id: loanId,
-                status: "ACTIVE",
-                created_at: "2026-01-15T14:22:10Z",
-                maturity_date: "2028-01-15T14:22:10Z",
-                financials: {
-                    total_borrowed: 15000.00,
-                    total_to_pay: 22450.80,
-                    remaining_balance: 18709.00,
-                    installments_paid: 4,
-                    installments_total: 24
-                },
-                payment_history: [
-                    { installment: 1, due_date: "2026-02-15", status: "PAID" },
-                    { installment: 2, due_date: "2026-03-15", status: "PAID" },
-                    { installment: 3, due_date: "2026-04-15", status: "PAID" },
-                    { installment: 4, due_date: "2026-05-15", status: "PAID" },
-                    { installment: 5, due_date: "2026-06-15", status: "PENDING" }
-                ]
-            };
+            try {
+                const response = await fetch(`${API_BASE}/api/loans`, { method: 'GET' });
+                const data = await response.json();
 
-            setResponseStatus('200 OK', 'success');
-            jsonResponse.innerText = JSON.stringify(mockResponse, null, 4);
+                if (response.ok) {
+                    setResponseStatus('200 OK', 'success');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+
+                    // Display loans in list
+                    const loansList = document.getElementById('loansList');
+                    if (data.length === 0) {
+                        loansList.innerHTML = '<p class="text-gray-400 text-sm">Nenhum empréstimo encontrado</p>';
+                    } else {
+                        loansList.innerHTML = data.map(loan => `
+                            <div class="bg-gray-700 p-4 rounded border border-gray-600">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-300">ID: ${loan.id}</p>
+                                        <p class="text-xs text-gray-400">Status: <span class="font-bold ${loan.status === 'APPROVED' ? 'text-green-400' : 'text-yellow-400'}">${loan.status}</span></p>
+                                    </div>
+                                    ${loan.status === 'PENDING' ? `
+                                        <button class="approve-btn bg-green-600 hover:bg-green-500 text-white text-xs px-3 py-1 rounded" data-id="${loan.id}">
+                                            Aprovar
+                                        </button>
+                                    ` : ''}
+                                </div>
+                                <div class="text-xs text-gray-400 space-y-1">
+                                    <p>Principal: <span class="text-white font-semibold">R$ ${loan.principal.toFixed(2)}</span></p>
+                                    <p>Taxa: <span class="text-white font-semibold">${loan.interestRate.toFixed(2)}% a.m.</span></p>
+                                    <p>Prazo: <span class="text-white font-semibold">${loan.months} meses</span></p>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        // Add event listeners to approve buttons
+                        document.querySelectorAll('.approve-btn').forEach(btn => {
+                            btn.addEventListener('click', approveLoan);
+                        });
+                    }
+                } else {
+                    setResponseStatus(`${response.status} ERROR`, 'error');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                setResponseStatus('ERROR', 'error');
+                jsonResponse.innerText = `Erro: ${error.message}`;
+            }
         });
 
-        // Limpar Console
+        // Approve Loan
+        async function approveLoan(e) {
+            const loanId = e.target.dataset.id;
+            setResponseStatus('200 APPROVING...', 'loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/loans/${loanId}/approve`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setResponseStatus('200 APPROVED', 'success');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+                    // Reload list
+                    document.getElementById('btnListLoans').click();
+                } else {
+                    setResponseStatus(`${response.status} ERROR`, 'error');
+                    jsonResponse.innerText = JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                setResponseStatus('ERROR', 'error');
+                jsonResponse.innerText = `Erro: ${error.message}`;
+            }
+        }
+
+        // Clear Console
         document.getElementById('clearConsole').addEventListener('click', function() {
             jsonResponse.innerText = "// Console limpo. Aguardando novas requisições...";
             setResponseStatus('IDLE', 'idle');
         });
+
+        // Check API health on load
+        checkApiHealth();
+        setInterval(checkApiHealth, 30000); // Check every 30 seconds
     </script>
+
 </body>
 </html>
